@@ -14,7 +14,7 @@ for i in range(len(contour)):
         lcontour.append(contour[i])
 
 
-cv.drawContours(img,lcontour,-1,(0,255,0),2)
+cv.drawContours(img,lcontour,-1,(0,255,0),3)
 
 cv.imshow('Original with contours',img)
 cv.imshow('Canny',canny)

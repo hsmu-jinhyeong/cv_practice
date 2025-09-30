@@ -5,7 +5,7 @@ img=cv.imread(r"C:\Users\kim\cv_practice\ch3\soccer.jpg")
 gray=cv.cvtColor(img,cv.COLOR_BGR2GRAY)
 
 canny1=cv.Canny(gray,50,150)
-canny2=cv.Canny(gray,75,175)
+canny2=cv.Canny(gray,100,200)
 
 cv.imshow('Original',gray)
 cv.imshow('Canny1',canny1)
