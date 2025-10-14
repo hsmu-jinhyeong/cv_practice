@@ -36,7 +36,8 @@ class SpecialEffect(QMainWindow):
         pictureButton.clicked.connect(self.pictureOpenFunction)
         embossButton.clicked.connect(self.embossFunction) 
         cartoonButton.clicked.connect(self.cartoonFunction)
-        sketchButton.clicked.connect(self.sketchFunction)
+        sketchButton.clicked.connect(self.sketchGrayFunction)
+        sketchButton.clicked.connect(self.sketchColorFunction)
         oilButton.clicked.connect(self.oilFunction) 
         saveButton.clicked.connect(self.saveFunction)    
         quitButton.clicked.connect(self.quitFunction)
@@ -62,10 +63,18 @@ class SpecialEffect(QMainWindow):
         self.cartoon=cv.stylization(self.img,sigma_s=60,sigma_r=0.45)
         cv.imshow('Cartoon',self.cartoon) 
     
-    def sketchFunction(self):
-        self.sketch_gray,self.sketch_color=cv.pencilSketch(self.img,sigma_s=60,sigma_r=0.07,shade_factor=0.02)
-        cv.imshow('Pencil sketch(gray)',self.sketch_gray)
-        cv.imshow('Pencil sketch(color)',self.sketch_color)
+    def sketchGrayFunction(self):
+        self.sketch_gray, _ = cv.pencilSketch(
+            self.img, sigma_s=60, sigma_r=0.07, shade_factor=0.02
+        )
+        cv.imshow('Pencil sketch(gray)', self.sketch_gray)
+
+    def sketchColorFunction(self):
+        _, self.sketch_color = cv.pencilSketch(
+            self.img, sigma_s=60, sigma_r=0.07, shade_factor=0.02
+    )
+        cv.imshow('Pencil sketch(color)', self.sketch_color)
+
 
     def oilFunction(self):
         self.oil=cv.xphoto.oilPainting(self.img,10,1,cv.COLOR_BGR2Lab)
@@ -86,19 +95,20 @@ class SpecialEffect(QMainWindow):
         self.close()
         
     def selectFunction(self):
-        i = self.pickCombo.currentIndex()
+        if not hasattr(self, 'img') or self.img is None:
+            QMessageBox.warning(self, "경고", "먼저 사진을 읽어오세요!")
+            return
 
-        if i == 0:  # 엠보싱
+        i = self.pickCombo.currentIndex()
+        if i == 0:
             self.embossFunction()
-        elif i == 1:  # 카툰
+        elif i == 1:
             self.cartoonFunction()
         elif i == 2:  # 연필 스케치(명암)
-            self.sketchFunction()
-            cv.imshow('Pencil sketch(gray)', self.sketch_gray)
+            self.sketchGrayFunction()
         elif i == 3:  # 연필 스케치(컬러)
-            self.sketchFunction()
-            cv.imshow('Pencil sketch(color)', self.sketch_color)
-        elif i == 4:  # 유화
+            self.sketchColorFunction()
+        elif i == 4:
             self.oilFunction()
 
                 
